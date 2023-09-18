@@ -103,4 +103,4 @@ if __name__ == '__main__':
     for i, j in zip(a, b):
         print(i, j)
 
-    #print('Hello world!')
+    print('Hello world!')
