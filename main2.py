@@ -21,6 +21,7 @@
 # print(Tinh1(x, a))
 
 from math import *
+import matplotlib.pyplot as plt
 import numpy as np
 # def Tinh2(a, b):
 #     return sum(i*j for i,j in zip(a, b))
@@ -83,3 +84,9 @@ print("w:", w)
 print("b:", b)
 print("Cost after training:", compute_cost(X, Y, w, b))
 
+plt.plot(X, Y, marker='o')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.title('Function y = w1x1 + w2x2 + ... + w6x6 + b')
+plt.grid(True)
+plt.show()

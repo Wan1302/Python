@@ -166,29 +166,55 @@
 # for i in range(n//2 - 1, -1, -1):
 #     print((char*(2*i + 1)).center(m, '-'))
 
-def print_rangoli(size):
-    import string
+# def print_rangoli(size):
+#     import string
 
-    # Create a string of lowercase letters
-    alphabet = string.ascii_lowercase
+#     # Create a string of lowercase letters
+#     alphabet = string.ascii_lowercase
 
-    # Create a list of letters to be used in the rangoli
-    letters = [alphabet[i] for i in range(size)]
+#     # Create a list of letters to be used in the rangoli
+#     letters = [alphabet[i] for i in range(size)]
 
-    # Create the top half of the rangoli
-    top_half = []
-    for i in range(size, 0 , -1):
-        row = '-'.join(letters[size - 1:i-1:-1] + letters[i - 1:size])
-        top_half.append(row.center(size * 4 - 3, '-'))
+#     # Create the top half of the rangoli
+#     top_half = []
+#     for i in range(size, 0 , -1):
+#         row = '-'.join(letters[size - 1:i-1:-1] + letters[i - 1:size])
+#         top_half.append(row.center(size * 4 - 3, '-'))
 
-    # Combine the top half and its reverse to get the full rangoli
-    rangoli = top_half + top_half[::-1][1:]
+#     # Combine the top half and its reverse to get the full rangoli
+#     rangoli = top_half + top_half[::-1][1:]
 
-    # Print the rangoli
-    for row in rangoli:
-        print(row)
+#     # Print the rangoli
+#     for row in rangoli:
+#         print(row)
 
-if __name__ == '__main__':
-    n = int(input())
-    print_rangoli(n)
+# if __name__ == '__main__':
+#     n = int(input())
+#     print_rangoli(n)
 
+from math import *
+
+# n = int(input())
+# x = list(map(int, input().split()))
+# y = list(map(int, input().split()))
+
+# s1 = sqrt(sum(i*i for i in x))
+# s2 = sqrt(sum(i*i for i in y))
+
+# s = sum(X*Y for X,Y in zip(x, y))
+
+# result = s / (s1*s2)
+
+# print(f'{result :.4f}')
+
+
+def Tinh(x):
+    max = 0
+    for i in range(len(x)):
+        sub = x[i+1] - x[i]
+        if(sub > max): max = sub 
+    return max
+n = int(input())
+x = list(map(int, input().split()))
+result = Tinh(x)
+print(result)

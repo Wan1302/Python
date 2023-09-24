@@ -1,4 +1,18 @@
 import pandas as pd
+import numpy as np
+import random
+import matplotlib.pyplot as plt
+
+
+def Hieuchinh(X):
+  dl = X.copy(deep = False)
+  cols = dl.columns.values
+  for col in cols:
+    mean = dl[col].mean()
+    std = dl[col].std()
+    dl[col] = (data[col] - mean) / std
+  return dl
+
 
 # Function to compute cost
 def compute_cost(X, Y, w, b):
@@ -16,7 +30,7 @@ def compute_cost(X, Y, w, b):
 def gradient_descent(X, Y, w, b, alpha, iterations):
     m = len(Y)
     num_features = len(w)
-    
+    Cost = []
     for i in range(iterations):
         delta_w = [0] * num_features
         delta_b = 0
@@ -43,10 +57,9 @@ def gradient_descent(X, Y, w, b, alpha, iterations):
         b -= alpha * delta_b / m
         
         cost = compute_cost(X, Y, w, b)
-        print(f'Iteration {i + 1}: w = {w}, b = {b}, Cost = {cost}')
+        Cost.append(cost)
     
-    return w, b
-
+    return w, b, Cost
 
 def Test(Z, T, w, b):
     a_dict = {}
@@ -68,40 +81,45 @@ def Test(Z, T, w, b):
         else:
             c_dict[i] = error
     return a_dict, b_dict, c_dict
-    
-# X = [[1, 2, 3, 4, 5, 6], [2, 3, 4, 5, 6, 7], [3, 4, 5, 6, 7, 8], [4, 5, 6, 7, 8, 9], [5, 6, 7, 8, 9, 10]]
-# Y = [2, 4, 5, 4, 5]
 
 data = pd.read_csv('Real estate.csv')
+X = data.drop(['Y house price of unit area', 'No'], axis = 1)
+Y = data["Y house price of unit area"]
 
-X = data.iloc[:300, 1:-1] #Lay tat ca cac cot tru cot cuoi
-Y = data.iloc[:300, -1] #Lay cot cuoi
-Z = data.iloc[300:, 1:-1]
-T = data.iloc[300: , -1]
+X_train = X[:300]
+X_test = X[300:]
+Y_train = Y[:300]
+Y_test = Y[300:]
 
-X = X.to_numpy()
-Y = Y.to_numpy()
-Z = Z.to_numpy()
-T = T.to_numpy()
 
-alpha = 1e-7
+Y_train = Y_train.to_numpy()
+Y_test = Y_test.to_numpy()
+
+X1 = Hieuchinh(X_train)
+X_train = X1.to_numpy()
+
+X2 = Hieuchinh(X_test)
+X_test = X2.to_numpy()
+
 iterations = 10000
-initial_w = [0, 0, 0, 0, 0, 0]  # Initialize weights for each feature
-initial_b = 0
+alpha = 0.001
+initial_w = np.array([random.uniform(0, 1) for _ in range(X_train.shape[1])])
+initial_b = random.uniform(0, 1)
 
-w, b = gradient_descent(X, Y, initial_w, initial_b, alpha, iterations)
+w, b, Error = gradient_descent(X_train, Y_train, initial_w, initial_b, alpha, iterations)
 
 print("w:", w)
 print("b:", b)
-print("Cost after training:", compute_cost(X, Y, w, b))
+print("Cost after training:", compute_cost(X_train, Y_train, w, b))
 
+plt.plot(Error)
+plt.xlabel('Iterations')
+plt.ylabel('Error')
+plt.title('Function y = w1x1 + w2x2 + ... + w6x6 + b')
+plt.grid(True)
+plt.show()
 
-a_dict, b_dict, c_dict = Test(Z, T, w, b)
+a_dict, b_dict, c_dict = Test(X_test, Y_test, w, b)
 print(f'a: {a_dict.keys()}, count: {len(a_dict)}')
 print(f'b: {b_dict.keys()}, count: {len(b_dict)}')
 print(f'c: {c_dict.keys()}, count: {len(c_dict)}')
-
-
-
-
-
