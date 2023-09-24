@@ -10,7 +10,7 @@ def Hieuchinh(X):
   for col in cols:
     mean = dl[col].mean()
     std = dl[col].std()
-    dl[col] = (data[col] - mean) / std
+    dl[col] = (dl[col] - mean) / std
   return dl
 
 
@@ -61,26 +61,17 @@ def gradient_descent(X, Y, w, b, alpha, iterations):
     
     return w, b, Cost
 
-def Test(Z, T, w, b):
-    a_dict = {}
-    b_dict = {}
-    c_dict = {}
-    m = len(T)
+def Test(X_test, w, b):
+    a = []
+    m = X_test.shape[0]
     num_features = len(w)
     for i in range(m):
         prediction = 0
-        error = 0
         for j in range(num_features):
-            prediction += w[j] * Z[i][j]
+            prediction += w[j] * X_test[i][j]
         prediction += b
-        error = (abs(prediction - T[i]) / T[i]) * 100
-        if(error >= 0 and error <= 5):
-            a_dict[i] = error
-        elif(error >= 6 and error <= 10):
-            b_dict[i] = error
-        else:
-            c_dict[i] = error
-    return a_dict, b_dict, c_dict
+        a.append(prediction)
+    return a
 
 data = pd.read_csv('Real estate.csv')
 X = data.drop(['Y house price of unit area', 'No'], axis = 1)
@@ -119,7 +110,14 @@ plt.title('Function y = w1x1 + w2x2 + ... + w6x6 + b')
 plt.grid(True)
 plt.show()
 
-a_dict, b_dict, c_dict = Test(X_test, Y_test, w, b)
-print(f'a: {a_dict.keys()}, count: {len(a_dict)}')
-print(f'b: {b_dict.keys()}, count: {len(b_dict)}')
-print(f'c: {c_dict.keys()}, count: {len(c_dict)}')
+Y_prediction = Test(X_test, w, b)
+result = pd.DataFrame (
+    {"Y_prediction" : Y_prediction, "Y_test" : Y_test, 
+     "% Different" : (abs(Y_prediction - Y_test) / Y_test) * 100},
+    index = range(1, Y_test.shape[0] + 1)
+)
+result
+
+print("Number of tests with less than 5% difference: ", result['% Different'][result['% Different'] <= 5.0].count())
+print("Number of tests with less than 10% difference: ", result['% Different'][result['% Different'] <= 10.0].count())
+print("Number of tests with more than 10% difference: ", result['% Different'][result['% Different'] > 10.0].count())
